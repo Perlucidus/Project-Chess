@@ -1,8 +1,11 @@
+#include "Definitions.h"
 #include "Pipe.h"
+#include "ChessUtility.h"
+#include "Board.h"
 #include <iostream>
-#include <thread>
 
 using namespace std;
+
 void main()
 {
 	Pipe p;
@@ -12,20 +15,28 @@ void main()
 		p.close();
 		return;
 	}
-	
+
+	Board* board = new Board();
+	Color currentPlayer = Color::White;
+
 	char msgToGraphics[1024];
-	// TODO: send the board to graphics
-	strcpy_s(msgToGraphics, "rnbkqbnrpppppppp################################PPPPPPPPRNBKQBNR1");
+	strcpy_s(msgToGraphics, board->toString().c_str());
+	strcat_s(msgToGraphics, "0");
+	//strcpy_s(msgToGraphics, "rnbkqbnrpppppppp################################PPPPPPPPRNBKQBNR1");
 	
 	p.sendMessageToGraphics(msgToGraphics);
 
 	string msgFromGraphics;
 	while ((msgFromGraphics = p.getMessageFromGraphics()) != "quit")
 	{
-		// TODO: handle the string the sent from graphics
-		strcpy_s(msgToGraphics, "");
+		Point src = ChessUtility::parsePoint(msgFromGraphics.substr(0, 2));
+		Point dst = ChessUtility::parsePoint(msgFromGraphics.substr(2, 4));
+		MoveCode result = ChessUtility::makeMove(board, currentPlayer, src, dst);
+		msgToGraphics[0] = '0' + (int)result;
+		msgToGraphics[1] = '\0';
 		p.sendMessageToGraphics(msgToGraphics);
-		msgFromGraphics = p.getMessageFromGraphics();
+		if (result == MoveCode::Valid || result == MoveCode::Check)
+			currentPlayer = (currentPlayer == Color::White) ? Color::Black : Color::White;
 	}
 
 	p.close();

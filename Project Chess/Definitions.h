@@ -1,3 +1,6 @@
+#ifndef _DEFINITIONS
+#define _DEFINITIONS
+
 #define BOARD_WIDTH		8
 #define BOARD_HEIGHT	8
 
@@ -19,8 +22,8 @@ enum class MoveCode : move_code_t {
 };
 
 enum class Color : color_t {
-	Black = 0,
-	White = 1,
+	White = 0,
+	Black = 1,
 	Transparent = 2,
 };
 
@@ -33,3 +36,5 @@ enum class PieceType : piece_type_t {
 	Queen = 'q',
 	Pawn = 'p'
 };
+
+#endif

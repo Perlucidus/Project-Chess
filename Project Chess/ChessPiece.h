@@ -1,34 +1,31 @@
-#pragma once
-#include "Point.h"
-#include "Definitions.h"
-#include "EmptyPiece.h"
-#include "Board.h"
-#include "ChessUtility.h"
+#ifndef _CHESS_PIECE
+#define _CHESS_PIECE
 
-class EmptyPiece;
-class ChessPiece
-{
+#include "Definitions.h"
+#include "Point.h"
+#include "Board.h"
+#include <vector>
+
+using namespace std;
+
+class Board;
+
+class ChessPiece {
 public:
 	ChessPiece(Point, Color, PieceType);
-	ChessPiece(int, int, Color, PieceType);
-	~ChessPiece();
 
-	EmptyPiece* temp(Color, Point);
-	void move(Point);
-	EmptyPiece* temp(Color, int, int);
-	void move(int,int);
-
-	Point* getPoint();
-	void setPoint(Point);
-	void setPoint(int, int);
+	Point getPosition();
 	Color getColor();
 	PieceType getType();
-	void setType(PieceType);
+	void move(Point);
 
-	bool canMove(Point);
+	virtual bool canMove(Board*, Point) = 0;
+	vector<Point> getAvailableMoves(Board*);
 
 protected:
-	Point* _point;
+	Point _position;
 	Color _color;
 	PieceType _type;
 };
+
+#endif

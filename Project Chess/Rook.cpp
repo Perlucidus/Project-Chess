@@ -1,66 +1,35 @@
 #include "Rook.h"
 
-Rook::Rook(Point p, Color c) : ChessPiece(p, c, PieceType::Rook){}
+Rook::Rook(Point position, Color color)
+	: ChessPiece(position, color, PieceType::Rook) {}
 
-Rook::~Rook(){}
-
-vector<Point> Rook::getAvaliableMoves(Board* board)
-{
-	vector<Point> moves;
-	int x, y;
-	bool flag = false;
-	for (y = _point->getY() + 1; y < BOARD_HEIGHT && !flag; y++)
-	{
-		if (board->getPiece(_point->getX(), y)->getColor() != _color)
-		{
-			if (board->getPiece(_point->getX(), y)->getColor() != Color::Transparent)
-				flag = true;
-			Point p(_point->getX(), y);
-			moves.push_back(p);
-		}
-		else
-			flag = true;
+bool Rook::canMove(Board* board, Point position) {
+	if (_position.equals(position))
+		return false;
+	if (_position.getX() != position.getX() &&
+		_position.getY() != position.getY())
+		return false;
+	else if (_position.getX() != position.getX()) {
+		bool right = _position.getX() < position.getX();
+		int x = _position.getX();
+		do {
+			right ? x++ : x--;
+			if (board->getPiece(Point(x, position.getY()))->getType() != PieceType::Empty)
+				break;
+		} while (x != position.getX());
+		if (x != position.getX())
+			return false;
 	}
-	flag = false;
-	for (y = _point->getY() - 1; y > BOARD_HEIGHT && !flag; y--)
-	{
-		if (board->getPiece(_point->getX(), y)->getColor() != _color)
-		{
-			if (board->getPiece(_point->getX(), y)->getColor() != Color::Transparent)
-				flag = true;
-			Point p(_point->getX(), y);
-			moves.push_back(p);
-		}
-		else
-			flag = true;
+	else if (_position.getY() != position.getY()) {
+		bool up = _position.getY() < position.getY();
+		int y = _position.getY();
+		do {
+			up ? y++ : y--;
+			if (board->getPiece(Point(position.getX(), y))->getType() != PieceType::Empty)
+				break;
+		} while (y != position.getY());
+		if (y != position.getY())
+			return false;
 	}
-
-	flag = false;
-	for (x = _point->getX() + 1; x < BOARD_WIDTH && !flag; x++)
-	{
-		if (board->getPiece(x ,_point->getY())->getColor() != _color)
-		{
-			if (board->getPiece(x, _point->getY())->getColor() != Color::Transparent)
-				flag = true;
-			Point p(x, _point->getY());
-			moves.push_back(p);
-		}
-		else
-			flag = true;
-	}
-	flag = false;
-	for (x = _point->getX() - 1; x > BOARD_WIDTH && !flag; x--)
-	{
-		if (board->getPiece(x, _point->getY())->getColor() != _color)
-		{
-			if (board->getPiece(_point->getX(), y)->getColor() != Color::Transparent)
-				flag = true;
-			Point p(x, _point->getY());
-			moves.push_back(p);
-		}
-		else
-			flag = true;
-	}
-
-	return moves;
+	return true;
 }
