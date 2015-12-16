@@ -5,6 +5,5 @@ class Knight : public ChessPiece
 {
 public:
 	Knight(Point, Color);
-	~Knight();
 	bool canMove(Board*, Point);
 };
