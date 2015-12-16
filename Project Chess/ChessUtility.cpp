@@ -1,10 +1,12 @@
 #include "ChessUtility.h"
 
-Point ChessUtility::parsePoint(string point) {
+Point ChessUtility::parsePoint(string point)
+{
 	return Point(point[0] - 'a', '8' - point[1]);
 }
 
-MoveCode ChessUtility::makeMove(Board* board, Color color, Point source, Point destination) {
+MoveCode ChessUtility::makeMove(Board* board, Color color, Point source, Point destination)
+{
 	if (!source.inBounds(BOARD_WIDTH, BOARD_HEIGHT) ||
 		!destination.inBounds(BOARD_WIDTH, BOARD_HEIGHT))
 		return MoveCode::InvalidIndex;
@@ -25,12 +27,14 @@ MoveCode ChessUtility::makeMove(Board* board, Color color, Point source, Point d
 	return MoveCode::Valid;
 }
 
-bool ChessUtility::isCheckMove(Board* board, Color color, Point source, Point destination) {
+bool ChessUtility::isCheckMove(Board* board, Color color, Point source, Point destination)
+{
 	// TODO: Finish this
 	return false;
 }
 
-/*bool ChessUtility::isCheck(Board* board, Color color) {
+/*bool ChessUtility::isCheck(Board* board, Color color)
+{
 	King* king = board->findPiece(color, PieceType::King);
 	if (!king)
 		return false;
@@ -41,7 +45,8 @@ bool ChessUtility::isCheckMove(Board* board, Color color, Point source, Point de
 	return false;
 }*/
 
-/*bool ChessUtility::isMate(Board* board, Color color) {
+/*bool ChessUtility::isMate(Board* board, Color color)
+{
 	King* king = board->findPiece(color, PieceType::King);
 	if (!king)
 		return false;

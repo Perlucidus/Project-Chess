@@ -3,16 +3,19 @@
 Rook::Rook(Point position, Color color)
 	: ChessPiece(position, color, PieceType::Rook) {}
 
-bool Rook::canMove(Board* board, Point position) {
+bool Rook::canMove(Board* board, Point position)
+{
 	if (_position.equals(position))
 		return false;
 	if (_position.getX() != position.getX() &&
 		_position.getY() != position.getY())
 		return false;
-	else if (_position.getX() != position.getX()) {
+	else if (_position.getX() != position.getX())
+	{
 		bool right = _position.getX() < position.getX();
 		int x = _position.getX();
-		do {
+		do
+		{
 			right ? x++ : x--;
 			if (board->getPiece(Point(x, position.getY()))->getType() != PieceType::Empty)
 				break;
@@ -20,10 +23,12 @@ bool Rook::canMove(Board* board, Point position) {
 		if (x != position.getX())
 			return false;
 	}
-	else if (_position.getY() != position.getY()) {
+	else if (_position.getY() != position.getY())
+	{
 		bool up = _position.getY() < position.getY();
 		int y = _position.getY();
-		do {
+		do
+		{
 			up ? y++ : y--;
 			if (board->getPiece(Point(position.getX(), y))->getType() != PieceType::Empty)
 				break;

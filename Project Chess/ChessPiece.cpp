@@ -3,23 +3,28 @@
 ChessPiece::ChessPiece(Point position, Color color, PieceType type)
 	: _position(position), _color(color), _type(type) {}
 
-Point ChessPiece::getPosition() {
+Point ChessPiece::getPosition()
+{
 	return _position;
 }
 
-Color ChessPiece::getColor() {
+Color ChessPiece::getColor()
+{
 	return _color;
 }
 
-PieceType ChessPiece::getType() {
+PieceType ChessPiece::getType()
+{
 	return _type;
 }
 
-void ChessPiece::move(Point position) {
+void ChessPiece::move(Point position)
+{
 	_position.move(position);
 }
 
-vector<Point> ChessPiece::getAvailableMoves(Board* board) {
+vector<Point> ChessPiece::getAvailableMoves(Board* board)
+{
 	vector<Point> moves;
 	for (int y = 0; y < BOARD_HEIGHT; y++)
 		for (int x = 0; x < BOARD_WIDTH; x++)
