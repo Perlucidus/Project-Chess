@@ -2,6 +2,8 @@
 #include "EmptyPiece.h"
 #include "Rook.h"
 #include "King.h"
+#include "Knight.h"
+#include "Bishop.h"
 
 Board::Board()
 {
@@ -56,6 +58,14 @@ void Board::Initialize()
 	addPiece(new Rook(Point(7, 7), Color::White));
 	addPiece(new King(Point(4, 7), Color::White));
 	addPiece(new King(Point(3, 0), Color::Black));
+	addPiece(new Knight(Point(1, 0), Color::Black));
+	addPiece(new Knight(Point(6, 0), Color::Black));
+	addPiece(new Knight(Point(1, 7), Color::White));
+	addPiece(new Knight(Point(6, 7), Color::White));
+	addPiece(new Bishop(Point(2, 0), Color::Black));
+	addPiece(new Bishop(Point(5, 0), Color::Black));
+	addPiece(new Bishop(Point(2, 7), Color::White));
+	addPiece(new Bishop(Point(5, 7), Color::White));
 	for (int y = 0; y < BOARD_HEIGHT; y++)
 		for (int x = 0; x < BOARD_WIDTH; x++)
 			if (!getPiece(Point(x, y)))
