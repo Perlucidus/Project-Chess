@@ -1,61 +1,58 @@
 #include "ChessUtility.h"
-#include "ChessMove.h"
 
-Point ChessUtility::parsePoint(const string& point)
+Point ChessUtility::parsePoint(string point)
 {
 	return Point(point[0] - 'a', '8' - point[1]);
 }
 
-MoveCode ChessUtility::makeMove(Board& board, Color color,
-	const Point& source, const Point& destination)
+MoveCode ChessUtility::makeMove(Board* board, Color color, Point source, Point destination)
 {
-	if (board.getPiece(source).getColor() != color)
+	if (!source.inBounds(BOARD_WIDTH, BOARD_HEIGHT) ||
+		!destination.inBounds(BOARD_WIDTH, BOARD_HEIGHT))
+		return MoveCode::InvalidIndex;
+	else if (source.equals(destination))
+		return MoveCode::MatchingPoints;
+	else if (board->getPiece(source)->getColor() != color)
 		return MoveCode::InvalidSource;
-	if (board.getPiece(destination).getColor() == color)
+	else if (board->getPiece(destination)->getColor() == color)
 		return MoveCode::InvalidDestination;
-	MoveCode code = board.getPiece(source).checkMove(board, destination);
-	if (code != MoveCode::Valid)
-		return code;
+	else if (!board->getPiece(source)->canMove(board, destination))
+		return MoveCode::InvalidMove;
+	//else if (isCheckMove(board, color, source, destination))
+	//	return MoveCode::InvalidCheck;
 	Color oppositeColor = color == Color::Black ? Color::White : Color::Black;
-	if (board.getPiece(destination).getType() == PieceType::Empty) {
-		ChessMove move(board.getPiece(source), destination);
-		move.doMove(board);
-	}
-	else {
-		CaptureMove move(board.getPiece(source), board.getPiece(destination));
-		move.doMove(board);
-	}
+	board->move(source, destination);
 	//if (isCheck(board, oppositeColor))
 	//	return isMate(board, oppositeColor) ? MoveCode::CheckMate : MoveCode::Check;
 	return MoveCode::Valid;
 }
 
-/*bool ChessUtility::isCheckMove(Board* board, Color color, Point source, Point destination)
+bool ChessUtility::isCheckMove(Board* board, Color color, Point source, Point destination)
 {
 	// TODO: Finish this
 	return false;
 }
 
-bool ChessUtility::isCheck(Board* board, Color color)
+/*bool ChessUtility::isCheck(Board* board, Color color)
 {
-	ChessPiece* king = board->findPiece(color, PieceType::King);
+	King* king = board->findPiece(color, PieceType::King);
 	if (!king)
 		return false;
-	for (size_t y = 0; y < BOARD_HEIGHT; y++)
-		for (size_t x = 0; x < BOARD_WIDTH; x++)
-			if (board->getPiece(x, y)->canMove(board, king->getPosition()))
+	for (int y = 0; y < BOARD_HEIGHT; y++)
+		for (int x = 0; x < BOARD_WIDTH; x++)
+			if (board->getPiece(x, y)->canMove(board, king->getLocation()))
 				return true;
 	return false;
-}
+}*/
 
-bool ChessUtility::isMate(Board* board, Color color)
+/*bool ChessUtility::isMate(Board* board, Color color)
 {
-	ChessPiece* king = board->findPiece(color, PieceType::King);
+	King* king = board->findPiece(color, PieceType::King);
 	if (!king)
 		return false;
-	vector<Point> moves = king->getAvailableMoves(board);
-	for (size_t i = 0; i < moves.size(); i++)
-		if (!isCheckMove(board, color, king->getPosition(), moves[i]))
+	vector<Point> moves = king->getAvailableMoves();
+	for (int i = 0; i < moves.size(); i++)
+		if (!isCheckMove(board, color, king->getLocation(), moves[i]))
 			return false;
 	return true;
 }*/

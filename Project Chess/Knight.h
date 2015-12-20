@@ -1,9 +1,9 @@
 #include "ChessPiece.h"
 #include "Board.h"
 
-class Rook : public ChessPiece
+class Knight : public ChessPiece
 {
 public:
-	Rook(Point, Color);
+	Knight(Point, Color);
 	bool canMove(Board*, Point);
 };

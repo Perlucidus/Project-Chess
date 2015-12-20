@@ -16,11 +16,11 @@ void main()
 		return;
 	}
 
-	Board board;
+	Board* board = new Board();
 	Color currentPlayer = Color::White;
 
 	char msgToGraphics[1024];
-	strcpy_s(msgToGraphics, board.toString().c_str());
+	strcpy_s(msgToGraphics, board->toString().c_str());
 	strcat_s(msgToGraphics, "0");
 	//strcpy_s(msgToGraphics, "rnbkqbnrpppppppp################################PPPPPPPPRNBKQBNR1");
 	
