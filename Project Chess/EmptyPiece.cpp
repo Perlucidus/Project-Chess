@@ -1,8 +1,3 @@
 #include "EmptyPiece.h"
 
-EmptyPiece::EmptyPiece(Point position)
-	: ChessPiece(position, Color::Transparent, PieceType::Empty) {}
-
-bool EmptyPiece::canMove(Board*, Point) {
-	return false;
-}
+EmptyPiece::EmptyPiece() : ChessPiece(Point(-1, -1), Color::Transparent, PieceType::Empty) {}

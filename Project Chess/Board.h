@@ -3,9 +3,9 @@
 
 #include "Definitions.h"
 #include "ChessPiece.h"
+#include "EmptyPiece.h"
 #include "Point.h"
-#include <vector>
-#include <exception>
+#include <map>
 
 using namespace std;
 
@@ -14,17 +14,13 @@ class ChessPiece;
 class Board {
 public:
 	Board();
-	~Board();
-	ChessPiece* getPiece(Point);
-	ChessPiece* getPiece(int, int);
-	ChessPiece* findPiece(Color, PieceType);
-	void move(Point, Point);
-	Board* clone();
-	string toString();
+	const ChessPiece& getPiece(const Point&) const;
+	const ChessPiece& findPiece(Color, PieceType) const;
+	void addPiece(const ChessPiece&);
+	void deletePiece(const Point&);
+	string toString() const;
 private:
-	ChessPiece* _pieces[BOARD_HEIGHT][BOARD_WIDTH];
-	void Initialize();
-	void addPiece(ChessPiece*);
+	map<Point, ChessPiece> _pieces;
 };
 
 #endif

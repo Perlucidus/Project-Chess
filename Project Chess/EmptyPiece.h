@@ -1,8 +1,12 @@
+#ifndef _EMPTY_PIECE
+#define _EMPTY_PIECE
+
 #include "ChessPiece.h"
 
-class EmptyPiece : public ChessPiece {
+class EmptyPiece : public ChessPiece
+{
 public:
-	EmptyPiece(Point);
-
-	bool canMove(Board*, Point);
+	EmptyPiece();
 };
+
+#endif

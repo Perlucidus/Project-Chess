@@ -1,34 +1,50 @@
 #include "ChessPiece.h"
+#include "EmptyPiece.h"
+#include "Rook.h"
 
-ChessPiece::ChessPiece(Point position, Color color, PieceType type)
+ChessPiece::ChessPiece()
+	: _position(Point(-1, -1)), _color(Color::Transparent), _type(PieceType::Empty) {}
+
+ChessPiece::ChessPiece(const Point& position, Color color, PieceType type)
 	: _position(position), _color(color), _type(type) {}
 
-Point ChessPiece::getPosition()
+const Point& ChessPiece::getPosition() const
 {
 	return _position;
 }
 
-Color ChessPiece::getColor()
+Color ChessPiece::getColor() const
 {
 	return _color;
 }
 
-PieceType ChessPiece::getType()
+PieceType ChessPiece::getType() const
 {
 	return _type;
 }
 
-void ChessPiece::move(Point position)
+void ChessPiece::move(const Point& destination)
 {
-	_position.move(position);
+	_position = destination;
 }
 
-vector<Point> ChessPiece::getAvailableMoves(Board* board)
+MoveCode ChessPiece::checkMove(const Board& board, const Point& destination) const
 {
-	vector<Point> moves;
-	for (int y = 0; y < BOARD_HEIGHT; y++)
-		for (int x = 0; x < BOARD_WIDTH; x++)
-			if (canMove(board, Point(x, y)))
-				moves.push_back(Point(x, y));
-	return moves;
+	switch (_type) {
+	case PieceType::Rook:
+		((Rook*)this)->checkMove(board, destination);
+		break;
+	default:
+		throw exception("Invalid piece type");
+	}
+}
+
+MoveCode ChessPiece::checkSanity(const Board& board, const Point& destination) const
+{
+	if (!_position.inBounds(BOARD_WIDTH, BOARD_HEIGHT) ||
+		!destination.inBounds(BOARD_WIDTH, BOARD_HEIGHT))
+		return MoveCode::InvalidIndex;
+	if (_position == destination)
+		return MoveCode::MatchingPoints;
+	return MoveCode::Valid;
 }

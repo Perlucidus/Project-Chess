@@ -3,8 +3,6 @@
 
 #include "Definitions.h"
 #include "Point.h"
-#include "Board.h"
-#include <vector>
 
 using namespace std;
 
@@ -12,20 +10,21 @@ class Board;
 
 class ChessPiece {
 public:
-	ChessPiece(Point, Color, PieceType);
+	ChessPiece();
+	ChessPiece(const Point&, Color, PieceType);
+	const Point& getPosition() const;
+	Color getColor() const;
+	PieceType getType() const;
+	void move(const Point&);
 
-	Point getPosition();
-	Color getColor();
-	PieceType getType();
-	void move(Point);
-
-	virtual bool canMove(Board*, Point) = 0;
-	vector<Point> getAvailableMoves(Board*);
+	MoveCode checkMove(const Board&, const Point&) const throw(...);
 
 protected:
 	Point _position;
 	Color _color;
 	PieceType _type;
+
+	MoveCode checkSanity(const Board&, const Point&) const;
 };
 
 #endif
