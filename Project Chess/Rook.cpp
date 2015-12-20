@@ -1,40 +1,30 @@
 #include "Rook.h"
+#include <algorithm>
 
-Rook::Rook(Point position, Color color)
-	: ChessPiece(position, color, PieceType::Rook) {}
+Rook::Rook(const Point& position, Color color) : ChessPiece(position, color, PieceType::Rook) {}
 
-bool Rook::canMove(Board* board, Point position)
+MoveCode Rook::checkMove(const Board& board, const Point& destination) const
 {
-	if (_position.equals(position))
-		return false;
-	if (_position.getX() != position.getX() &&
-		_position.getY() != position.getY())
-		return false;
-	else if (_position.getX() != position.getX())
-	{
-		bool right = _position.getX() < position.getX();
-		int x = _position.getX();
-		do
+	MoveCode code = checkSanity(board, destination);
+	if (code != MoveCode::Valid)
+		return code;
+	if (_position.first == destination.first) {
+		for (int y = std::min(_position.second, destination.second) + 1;
+		y < std::max(_position.second, destination.second) - 1; y++)
 		{
-			right ? x++ : x--;
-			if (board->getPiece(Point(x, position.getY()))->getType() != PieceType::Empty)
-				break;
-		} while (x != position.getX());
-		if (x != position.getX())
-			return false;
+			if (board.getPiece(Point(_position.first, y)).getType() != PieceType::Empty)
+				return MoveCode::InvalidMove;
+		}
+		return MoveCode::Valid;
 	}
-	else if (_position.getY() != position.getY())
-	{
-		bool up = _position.getY() < position.getY();
-		int y = _position.getY();
-		do
+	if (_position.second == destination.second) {
+		for (int x = std::min(_position.first, destination.first) + 1;
+		x < std::max(_position.first, destination.first) - 1; x++)
 		{
-			up ? y++ : y--;
-			if (board->getPiece(Point(position.getX(), y))->getType() != PieceType::Empty)
-				break;
-		} while (y != position.getY());
-		if (y != position.getY())
-			return false;
+			if (board.getPiece(Point(x, _position.second)).getType() != PieceType::Empty)
+				return MoveCode::InvalidMove;
+		}
+		return MoveCode::Valid;
 	}
-	return true;
+	return MoveCode::InvalidMove;
 }

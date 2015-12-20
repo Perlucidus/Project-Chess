@@ -1,19 +1,12 @@
 #ifndef _POINT
 #define _POINT
 
-class Point {
+#include <utility>
+
+class Point : public std::pair<int, int> {
 public:
 	Point(int, int);
-	~Point();
-	int getX();
-	int getY();
-	void move(Point);
-	void move(int, int);
-	bool inBounds(int, int);
-	bool equals(Point);
-private:
-	int _x;
-	int _y;
+	bool inBounds(int, int) const;
 };
 
 #endif
