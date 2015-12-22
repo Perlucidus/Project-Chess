@@ -17,11 +17,13 @@ MoveCode ChessUtility::makeMove(Board& board, Color color,
 	if (code != MoveCode::Valid)
 		return code;
 	Color oppositeColor = color == Color::Black ? Color::White : Color::Black;
-	if (board.getPiece(destination).getType() == PieceType::Empty) {
+	if (board.getPiece(destination).getType() == PieceType::Empty)
+	{
 		ChessMove move(board.getPiece(source), destination);
 		move.doMove(board);
 	}
-	else {
+	else
+	{
 		CaptureMove move(board.getPiece(source), board.getPiece(destination));
 		move.doMove(board);
 	}

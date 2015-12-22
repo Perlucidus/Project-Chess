@@ -1,6 +1,11 @@
 #include "Board.h"
 #include "EmptyPiece.h"
 #include "Rook.h"
+#include "King.h"
+#include "Knight.h"
+#include "Bishop.h"
+#include "Queen.h"
+#include "Pawn.h"
 
 EmptyPiece _emptyPiece;
 
@@ -10,6 +15,23 @@ Board::Board()
 	addPiece(Rook(Point(7, 0), Color::Black));
 	addPiece(Rook(Point(0, 7), Color::White));
 	addPiece(Rook(Point(7, 7), Color::White));
+	addPiece(King(Point(3, 7), Color::White));
+	addPiece(King(Point(3, 0), Color::Black));
+	addPiece(Knight(Point(1, 0), Color::Black));
+	addPiece(Knight(Point(6, 0), Color::Black));
+	addPiece(Knight(Point(1, 7), Color::White));
+	addPiece(Knight(Point(6, 7), Color::White));
+	addPiece(Bishop(Point(2, 0), Color::Black));
+	addPiece(Bishop(Point(5, 0), Color::Black));
+	addPiece(Bishop(Point(2, 7), Color::White));
+	addPiece(Bishop(Point(5, 7), Color::White));
+	addPiece(Queen(Point(4, 7), Color::White));
+	addPiece(Queen(Point(4, 0), Color::Black));
+	for (int i = 0; i < BOARD_WIDTH; i++)
+	{
+		addPiece(Pawn(Point(i, 1), Color::Black));
+		addPiece(Pawn(Point(i, 6), Color::White));
+	}
 }
 
 const ChessPiece& Board::getPiece(const Point& position) const

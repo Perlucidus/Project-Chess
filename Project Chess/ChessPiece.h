@@ -15,6 +15,7 @@ public:
 	const Point& getPosition() const;
 	Color getColor() const;
 	PieceType getType() const;
+	void setType(PieceType);
 	void move(const Point&);
 
 	MoveCode checkMove(const Board&, const Point&) const throw(...);
