@@ -6,11 +6,9 @@
 
 using namespace std;
 
-void main()
-{
+void main() {
 	Pipe p;
-	if (!p.connect())
-	{
+	if (!p.connect()) {
 		cout << "Failed to connect to graphics." << endl;
 		p.close();
 		return;
@@ -23,12 +21,11 @@ void main()
 	strcpy_s(msgToGraphics, board.toString().c_str());
 	strcat_s(msgToGraphics, "0");
 	//strcpy_s(msgToGraphics, "rnbkqbnrpppppppp################################PPPPPPPPRNBKQBNR1");
-	
+
 	p.sendMessageToGraphics(msgToGraphics);
 
 	string msgFromGraphics;
-	while ((msgFromGraphics = p.getMessageFromGraphics()) != "quit")
-	{
+	while ((msgFromGraphics = p.getMessageFromGraphics()) != "quit") {
 		Point src = ChessUtility::parsePoint(msgFromGraphics.substr(0, 2));
 		Point dst = ChessUtility::parsePoint(msgFromGraphics.substr(2, 4));
 		MoveCode result = ChessUtility::makeMove(board, currentPlayer, src, dst);

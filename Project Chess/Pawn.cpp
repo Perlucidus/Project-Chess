@@ -28,11 +28,10 @@ MoveCode Pawn::checkMove(const Board& board, const Point& destination) const
 			board.getPiece(Point(destination.first, _position.second)).getColor() != Color::Transparent))
 			return MoveCode::Valid;
 	}
-		
 	return MoveCode::InvalidMove;
 }
 
-bool Pawn::isPromotion(Board& board, const Point& destination)
+bool Pawn::isPromotion(Board& board, const Point& destination) const
 {
 	return (_color == Color::Black && destination.second == 6) || (_color == Color::White && destination.second == 1);
 }

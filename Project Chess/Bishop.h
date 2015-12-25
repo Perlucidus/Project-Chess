@@ -8,7 +8,10 @@ class Bishop : public ChessPiece
 {
 public:
 	Bishop(const Point&, Color);
-	MoveCode checkMove(const Board&, const Point&) const;
+
+	virtual MoveCode checkMove(const Board&, const Point&) const;
+	virtual ChessPiece* clone() const { return new Bishop(_position, _color); }
+	virtual ChessMoves getAvailableMoves(const Board&) const;
 };
 
 #endif

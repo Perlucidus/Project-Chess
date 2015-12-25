@@ -3,10 +3,10 @@
 
 #include "Definitions.h"
 #include "Point.h"
-
-using namespace std;
+#include <map>
 
 class Board;
+class ChessMoves;
 
 class ChessPiece {
 public:
@@ -18,7 +18,9 @@ public:
 	void setType(PieceType);
 	void move(const Point&);
 
-	MoveCode checkMove(const Board&, const Point&) const throw(...);
+	virtual ChessPiece* clone() const = 0;
+	virtual MoveCode checkMove(const Board&, const Point&) const = 0;
+	virtual ChessMoves getAvailableMoves(const Board&) const = 0;
 
 protected:
 	Point _position;
@@ -26,6 +28,11 @@ protected:
 	PieceType _type;
 
 	MoveCode checkSanity(const Board&, const Point&) const;
+};
+
+class ChessPieces : public std::map<Point, const ChessPiece*> {
+public:
+	~ChessPieces();
 };
 
 #endif
