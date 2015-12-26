@@ -25,3 +25,45 @@ MoveCode Rook::checkMove(const Board& board, const Point& destination) const {
 	}
 	return MoveCode::InvalidMove;
 }
+
+ChessMoves Rook::getAvailableMoves(const Board& board) const
+{
+	ChessMoves moves;
+	for (int x = _position.first + 1; x < BOARD_WIDTH; x++) {
+		if (board.getPiece(Point(x, _position.second)).getColor() == _color)
+			break;
+		if (board.getPiece(Point(x, _position.second)).getType() != PieceType::Empty) {
+			moves.push_back(new CaptureMove(*this, board.getPiece(Point(x, _position.second))));
+			break;
+		}
+		moves.push_back(new ChessMove(*this, Point(x, _position.second)));
+	}
+	for (int x = _position.first - 1; x > 0; x--) {
+		if (board.getPiece(Point(x, _position.second)).getColor() == _color)
+			break;
+		if (board.getPiece(Point(x, _position.second)).getType() != PieceType::Empty) {
+			moves.push_back(new CaptureMove(*this, board.getPiece(Point(x, _position.second))));
+			break;
+		}
+		moves.push_back(new ChessMove(*this, Point(x, _position.second)));
+	}
+	for (int y = _position.second; y < BOARD_HEIGHT; y++) {
+		if (board.getPiece(Point(_position.first, y)).getColor() == _color)
+			break;
+		if (board.getPiece(Point(_position.first, y)).getType() != PieceType::Empty) {
+			moves.push_back(new CaptureMove(*this, board.getPiece(Point(_position.first, y))));
+			break;
+		}
+		moves.push_back(new ChessMove(*this, Point(_position.first, y)));
+	}
+	for (int y = _position.second; y > 0; y--) {
+		if (board.getPiece(Point(_position.first, y)).getColor() == _color)
+			break;
+		if (board.getPiece(Point(_position.first, y)).getType() != PieceType::Empty) {
+			moves.push_back(new CaptureMove(*this, board.getPiece(Point(_position.first, y))));
+			break;
+		}
+		moves.push_back(new ChessMove(*this, Point(_position.first, y)));
+	}
+	return moves;
+}

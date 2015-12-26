@@ -35,3 +35,54 @@ MoveCode Bishop::checkMove(const Board& board, const Point& destination) const
 	}
 	return MoveCode::InvalidMove;
 }
+
+ChessMoves Bishop::getAvailableMoves(const Board& board) const
+{
+	ChessMoves moves;
+	int y = _position.second + 1;
+	for (int x = _position.first + 1; x < BOARD_WIDTH && y < BOARD_HEIGHT; x++) {
+		if (board.getPiece(Point(x, y)).getColor() == _color)
+			break;
+		if (board.getPiece(Point(x, y)).getType() != PieceType::Empty) {
+			moves.push_back(new CaptureMove(*this, board.getPiece(Point(x, y))));
+			break;
+		}
+		moves.push_back(new ChessMove(*this, Point(x, y)));
+		y++;
+	}
+	y = _position.second - 1;
+	for (int x = _position.first - 1; x > 0 && y > 0; x--) {
+		if (board.getPiece(Point(x, y)).getColor() == _color)
+			break;
+		if (board.getPiece(Point(x, y)).getType() != PieceType::Empty) {
+			moves.push_back(new CaptureMove(*this, board.getPiece(Point(x, y))));
+			break;
+		}
+		moves.push_back(new ChessMove(*this, Point(x, y)));
+		y--;
+	}
+	y = _position.second - 1;
+	for (int x = _position.second; x < BOARD_WIDTH && y > 0; x++) {
+		if (board.getPiece(Point(x, y)).getColor() == _color)
+			break;
+		if (board.getPiece(Point(x, y)).getType() != PieceType::Empty) {
+			moves.push_back(new CaptureMove(*this, board.getPiece(Point(x, y))));
+			break;
+		}
+		moves.push_back(new ChessMove(*this, Point(x, y)));
+		y++;
+	}
+	y = _position.second + 1;
+	for (int x = _position.second; x > 0 && y < BOARD_HEIGHT; x--) {
+		if (board.getPiece(Point(x, y)).getColor() == _color)
+			break;
+		if (board.getPiece(Point(x, y)).getType() != PieceType::Empty) {
+			moves.push_back(new CaptureMove(*this, board.getPiece(Point(x, y))));
+			break;
+		}
+		moves.push_back(new ChessMove(*this, Point(x, y)));
+		y--;
+	}
+
+	return moves;
+}

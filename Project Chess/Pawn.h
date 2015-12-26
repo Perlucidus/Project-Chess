@@ -8,7 +8,6 @@ class Pawn : public ChessPiece
 {
 public:
 	Pawn(const Point&, Color);
-	bool isPromotion(Board&, const Point&) const;
 
 	virtual MoveCode checkMove(const Board&, const Point&) const;
 	virtual ChessPiece* clone() const { return new Pawn(_position, _color); }
