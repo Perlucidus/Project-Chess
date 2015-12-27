@@ -14,8 +14,10 @@ public:
 	virtual void doMove(Board&) const;
 	virtual void undoMove(Board&) const;
 	
-	bool allowsEnPassent() const;
-private:
+	bool allowsEnPassant() const;
+	bool preventsShortCastling() const;
+	bool preventsLongCastling() const;
+protected:
 	ChessPiece* _source;
 	Point _destination;
 };

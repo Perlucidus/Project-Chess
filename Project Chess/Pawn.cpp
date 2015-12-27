@@ -34,7 +34,7 @@ MoveCode Pawn::checkMove(const Board& board, const Point& destination) const
 						 !board.getMoves().empty()) {
 					const ChessMove* lastMove = board.getMoves().back();
 					const ChessPiece& piece = board.getPiece(Point(destination.first, 3));
-					if (lastMove->allowsEnPassent() && piece.getType() == PieceType::Pawn &&
+					if (lastMove->allowsEnPassant() && piece.getType() == PieceType::Pawn &&
 						piece.getColor() == Color::Black)
 						return MoveCode::Valid;
 				}
@@ -47,7 +47,7 @@ MoveCode Pawn::checkMove(const Board& board, const Point& destination) const
 						 !board.getMoves().empty()) {
 					const ChessMove* lastMove = board.getMoves().back();
 					const ChessPiece& piece = board.getPiece(Point(destination.first, 4));
-					if (lastMove->allowsEnPassent() && piece.getType() == PieceType::Pawn &&
+					if (lastMove->allowsEnPassant() && piece.getType() == PieceType::Pawn &&
 						piece.getColor() == Color::White)
 						return MoveCode::Valid;
 				}

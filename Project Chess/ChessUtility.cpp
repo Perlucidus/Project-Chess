@@ -1,6 +1,5 @@
 #include "ChessUtility.h"
 #include "ChessMove.h"
-#include <iostream>
 
 Point ChessUtility::parsePoint(const string& point) {
 	return Point(point[0] - 'a', '8' - point[1]);
@@ -39,11 +38,28 @@ bool ChessUtility::isCheck(const Board& board, Color color) {
 	const ChessPiece& king = board.findPiece(color, PieceType::King);
 	if (king.getType() == PieceType::Empty)
 		return false;
-	for (ChessPieces::const_iterator it = board.getPieces().begin();
-	it != board.getPieces().end(); it++)
-		if (it->second->checkMove(board, king.getPosition()) == MoveCode::Valid)
+	return isUnderAttack(board, color, king.getPosition());
+}
+
+bool ChessUtility::isUnderAttack(const Board& board, Color color, const Point& position) {
+	for (ChessPieces::const_iterator it = board.getPieces().begin(); it != board.getPieces().end(); it++)
+		if (it->second->getColor() != color && it->second->checkMove(board, position) == MoveCode::Valid)
 			return true;
 	return false;
+}
+
+bool ChessUtility::shortCastlingPossible(const Board& board, Color color) {
+	for (ChessMoves::const_iterator it = board.getMoves().begin(); it != board.getMoves().end(); it++)
+		if ((*it)->preventsShortCastling())
+			return false;
+	return true;
+}
+
+bool ChessUtility::longCastlingPossible(const Board& board, Color color) {
+	for (ChessMoves::const_iterator it = board.getMoves().begin(); it != board.getMoves().end(); it++)
+		if ((*it)->preventsLongCastling())
+			return false;
+	return true;
 }
 
 bool ChessUtility::isMate(Board& board, Color color) {
@@ -54,7 +70,6 @@ bool ChessUtility::isMate(Board& board, Color color) {
 	pieces.clone(board.getPieces());
 	for (ChessPieces::const_iterator it = pieces.begin(); it != pieces.end(); it++)
 		if (it->second->getColor() == color) {
-			std::cout << "Piece: " << (char)it->second->getType() << " (" << it->second->getPosition().first << ", " << it->second->getPosition().second << ")" << std::endl;
 			ChessMoves moves;
 			it->second->getAvailableMoves(board, moves);
 			for (ChessMoves::const_iterator it2 = moves.begin(); it2 != moves.end(); it2++) {

@@ -1,6 +1,7 @@
 #include "Point.h"
 #include "ChessMove.h"
 #include "Board.h"
+#include "Rook.h"
 #include "Queen.h"
 
 ChessMove::ChessMove(const ChessPiece& source, const Point& destination)
@@ -37,8 +38,9 @@ void ChessMove::doMove(Board& board) const {
 	board.deletePiece(_destination);
 	if (_source->getType() == PieceType::Pawn) {
 		if (_destination.second == 0 || _destination.second == 7) {
+			Color color = piece->getColor();
 			delete piece;
-			piece = new Queen(_destination, piece->getColor());
+			piece = new Queen(_destination, color);
 		}
 		else if (_source->getColor() == Color::White) {
 			const ChessPiece& pawn = board.getPiece(Point(_destination.first, _destination.second + 1));
@@ -55,7 +57,13 @@ void ChessMove::doMove(Board& board) const {
 }
 
 void CastlingMove::doMove(Board& board) const {
-
+	ChessMove::doMove(board);
+	if (_destination.first > _source->getPosition().first)
+		ChessMove(Rook(Point(7, _destination.second), _source->getColor()),
+				  Point(5, _destination.second)).doMove(board);
+	else
+		ChessMove(Rook(Point(0, _destination.second), _source->getColor()),
+				  Point(3, _destination.second)).doMove(board);
 }
 
 void ChessMove::undoMove(Board& board) const {
@@ -63,10 +71,20 @@ void ChessMove::undoMove(Board& board) const {
 	board.addPiece(*_source);
 }
 
-bool ChessMove::allowsEnPassent() const {
+bool ChessMove::allowsEnPassant() const {
 	if (_source->getType() != PieceType::Pawn)
 		return false;
 	return abs(_destination.second - _source->getPosition().second) == 2;
+}
+
+bool ChessMove::preventsShortCastling() const {
+	return _source->getType() == PieceType::King ||
+		_source->getType() == PieceType::Rook && _source->getPosition().first == 7;
+}
+
+bool ChessMove::preventsLongCastling() const {
+	return _source->getType() == PieceType::King ||
+		_source->getType() == PieceType::Rook && _source->getPosition().first == 0;
 }
 
 void CaptureMove::undoMove(Board& board) const {
@@ -75,5 +93,11 @@ void CaptureMove::undoMove(Board& board) const {
 }
 
 void CastlingMove::undoMove(Board& board) const {
-
+	ChessMove::undoMove(board);
+	if (_destination.first > _source->getPosition().first)
+		ChessMove(Rook(Point(7, _destination.second), _source->getColor()),
+				  Point(5, _destination.second)).undoMove(board);
+	else
+		ChessMove(Rook(Point(0, _destination.second), _source->getColor()),
+				  Point(3, _destination.second)).undoMove(board);
 }
