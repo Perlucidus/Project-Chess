@@ -23,9 +23,10 @@ CastlingMove::CastlingMove(const ChessPiece& source, const Point& destination)
 CastlingMove::~CastlingMove() {}
 
 ChessMoves::~ChessMoves() {
-	while (empty()) {
-		delete back();
+	while (!empty()) {
+		const ChessMove* move = back();
 		pop_back();
+		delete move;
 	}
 }
 
@@ -34,10 +35,20 @@ void ChessMove::doMove(Board& board) const {
 	board.deletePiece(_source->getPosition());
 	piece->move(_destination);
 	board.deletePiece(_destination);
-	if (_source->getType() == PieceType::Pawn &&
-		(_destination.second == 0 || _destination.second == 7)) {
-		delete piece;
-		piece = new Queen(_destination, piece->getColor());
+	if (_source->getType() == PieceType::Pawn) {
+		if (_destination.second == 0 || _destination.second == 7) {
+			delete piece;
+			piece = new Queen(_destination, piece->getColor());
+		}
+		else if (_source->getColor() == Color::White) {
+			const ChessPiece& pawn = board.getPiece(Point(_destination.first, _destination.second + 1));
+			if (pawn.getColor() == Color::Black)
+				board.deletePiece(pawn.getPosition());
+		} else if (_source->getColor() == Color::Black) {
+			const ChessPiece& pawn = board.getPiece(Point(_destination.first, _destination.second - 1));
+			if (pawn.getColor() == Color::White)
+				board.deletePiece(pawn.getPosition());
+		}
 	}
 	board.addPiece(*piece);
 	delete piece;
@@ -50,6 +61,12 @@ void CastlingMove::doMove(Board& board) const {
 void ChessMove::undoMove(Board& board) const {
 	board.deletePiece(_destination);
 	board.addPiece(*_source);
+}
+
+bool ChessMove::allowsEnPassent() const {
+	if (_source->getType() != PieceType::Pawn)
+		return false;
+	return abs(_destination.second - _source->getPosition().second) == 2;
 }
 
 void CaptureMove::undoMove(Board& board) const {

@@ -57,9 +57,8 @@ MoveCode Queen::checkMove(const Board& board, const Point& destination) const
 	return MoveCode::InvalidMove;
 }
 
-ChessMoves Queen::getAvailableMoves(const Board& board) const
+void Queen::getAvailableMoves(const Board& board, ChessMoves& moves) const
 {
-	ChessMoves moves;
 	for (int x = _position.first + 1; x < BOARD_WIDTH; x++) {
 		if (board.getPiece(Point(x, _position.second)).getColor() == _color)
 			break;
@@ -141,5 +140,4 @@ ChessMoves Queen::getAvailableMoves(const Board& board) const
 		moves.push_back(new ChessMove(*this, Point(x, y)));
 		y--;
 	}
-	return moves;
 }

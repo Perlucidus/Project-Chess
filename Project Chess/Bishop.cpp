@@ -36,9 +36,8 @@ MoveCode Bishop::checkMove(const Board& board, const Point& destination) const
 	return MoveCode::InvalidMove;
 }
 
-ChessMoves Bishop::getAvailableMoves(const Board& board) const
+void Bishop::getAvailableMoves(const Board& board, ChessMoves& moves) const
 {
-	ChessMoves moves;
 	int y = _position.second + 1;
 	for (int x = _position.first + 1; x < BOARD_WIDTH && y < BOARD_HEIGHT; x++) {
 		if (board.getPiece(Point(x, y)).getColor() == _color)
@@ -83,6 +82,4 @@ ChessMoves Bishop::getAvailableMoves(const Board& board) const
 		moves.push_back(new ChessMove(*this, Point(x, y)));
 		y--;
 	}
-
-	return moves;
 }

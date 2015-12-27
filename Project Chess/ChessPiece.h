@@ -20,7 +20,7 @@ public:
 
 	virtual ChessPiece* clone() const = 0;
 	virtual MoveCode checkMove(const Board&, const Point&) const = 0;
-	virtual ChessMoves getAvailableMoves(const Board&) const = 0;
+	virtual void getAvailableMoves(const Board&, ChessMoves&) const = 0;
 
 protected:
 	Point _position;
@@ -33,6 +33,8 @@ protected:
 class ChessPieces : public std::map<Point, const ChessPiece*> {
 public:
 	~ChessPieces();
+
+	void clone(const ChessPieces&);
 };
 
 #endif

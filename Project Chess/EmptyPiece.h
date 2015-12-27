@@ -11,7 +11,7 @@ public:
 
 	virtual MoveCode checkMove(const Board&, const Point&) const { return MoveCode::InvalidMove; }
 	virtual ChessPiece* clone() const { return new EmptyPiece(); }
-	virtual ChessMoves getAvailableMoves(const Board&) const { return ChessMoves(); }
+	virtual void getAvailableMoves(const Board&, ChessMoves& moves) const {}
 };
 
 #endif

@@ -10,6 +10,6 @@ public:
 
 	virtual MoveCode checkMove(const Board&, const Point&) const;
 	virtual ChessPiece* clone() const { return new King(_position, _color); }
-	virtual ChessMoves getAvailableMoves(const Board&) const;
+	virtual void getAvailableMoves(const Board&, ChessMoves& moves) const;
 };
 #endif

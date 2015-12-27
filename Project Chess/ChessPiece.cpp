@@ -45,3 +45,9 @@ ChessPieces::~ChessPieces() {
 	}
 	erase(begin(), end());
 }
+
+void ChessPieces::clone(const ChessPieces& pieces) {
+	clear();
+	for (ChessPieces::const_iterator it = pieces.begin(); it != pieces.end(); it++)
+		operator[](it->first) = it->second->clone();
+}

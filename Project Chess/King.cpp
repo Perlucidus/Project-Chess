@@ -16,9 +16,8 @@ MoveCode King::checkMove(const Board& board, const Point& destination) const
 	return MoveCode::InvalidMove;
 }
 
-ChessMoves King::getAvailableMoves(const Board& board) const
+void King::getAvailableMoves(const Board& board, ChessMoves& moves) const
 {
-	ChessMoves moves;
 	for (int x = _position.first - 1; x <= _position.first + 1; x++)
 		for (int y = _position.second - 1; y <= _position.second + 1; y++)
 		{
@@ -26,7 +25,6 @@ ChessMoves King::getAvailableMoves(const Board& board) const
 				if (board.getPiece(Point(x,y)).getType() != PieceType::Empty)
 					moves.push_back(new CaptureMove(*this, board.getPiece(Point(x, y))));
 				else
-					moves.push_back(new ChessMove(*this, Point(x, _position.second + 1)));
+					moves.push_back(new ChessMove(*this, Point(x, y)));
 		}
-	return moves;
 }

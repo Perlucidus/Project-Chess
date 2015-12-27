@@ -71,8 +71,9 @@ void Board::deletePiece(const Point& position)
 {
 	if (_pieces.find(position) != _pieces.end())
 	{
-		delete _pieces[position];
+		const ChessPiece* piece = _pieces[position];
 		_pieces.erase(position);
+		delete piece;
 	}
 }
 

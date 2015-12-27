@@ -8,32 +8,57 @@ MoveCode Pawn::checkMove(const Board& board, const Point& destination) const
 	MoveCode code = checkSanity(board, destination);
 	if (code != MoveCode::Valid)
 		return code;
+	if (_position.first == destination.first &&
+		board.getPiece(destination).getType() == PieceType::Empty) {
+		if (_color == Color::White) {
+			if (_position.second - destination.second == 1)
+				return MoveCode::Valid;
+			if (_position.second == 6 && destination.second == 4 &&
+				board.getPiece(Point(_position.first, 5)).getType() == PieceType::Empty)
+				return MoveCode::Valid;
+		}
+		if (_color == Color::Black) {
+			if (destination.second - _position.second == 1)
+				return MoveCode::Valid;
+			if (_position.second == 1 && destination.second == 3 &&
+				board.getPiece(Point(_position.first, 2)).getType() == PieceType::Empty)
+				return MoveCode::Valid;
+		}
+	}
+	if (abs(_position.first - destination.first) == 1) {
+		if (_color == Color::White) {
+			if (_position.second - destination.second == 1)
+				if (board.getPiece(destination).getColor() == Color::Black)
+					return MoveCode::Valid;
+				else if (board.getPiece(destination).getType() == PieceType::Empty &&
+						 !board.getMoves().empty()) {
+					const ChessMove* lastMove = board.getMoves().back();
+					const ChessPiece& piece = board.getPiece(Point(destination.first, 3));
+					if (lastMove->allowsEnPassent() && piece.getType() == PieceType::Pawn &&
+						piece.getColor() == Color::Black)
+						return MoveCode::Valid;
+				}
+		}
+		if (_color == Color::Black) {
+			if (destination.second - _position.second == 1)
+				if (board.getPiece(destination).getColor() == Color::White)
+					return MoveCode::Valid;
+				else if (board.getPiece(destination).getType() == PieceType::Empty &&
+						 !board.getMoves().empty()) {
+					const ChessMove* lastMove = board.getMoves().back();
+					const ChessPiece& piece = board.getPiece(Point(destination.first, 4));
+					if (lastMove->allowsEnPassent() && piece.getType() == PieceType::Pawn &&
+						piece.getColor() == Color::White)
+						return MoveCode::Valid;
+				}
+		}
+	}
 
-	if (((_color == Color::Black && _position.second == 1 && destination.second - _position.second <= 2 && destination.second - _position.second > 0
-		&& board.getPiece(Point(_position.first, _position.second + 1)).getType() == PieceType::Empty)) ||
-		(_color == Color::White && _position.second == 6 && _position.second - destination.second <= 2 && _position.second - destination.second > 0
-		&& board.getPiece(Point(_position.first, _position.second - 1)).getType() == PieceType::Empty) &&
-		(_position.first == destination.first && board.getPiece(destination).getColor() == Color::Transparent))
-		return MoveCode::Valid;
-	
-	if (((_color == Color::Black && destination.second - _position.second == 1) ||
-		(_color == Color::White && _position.second - destination.second == 1)) &&
-		_position.first == destination.first && board.getPiece(destination).getColor() == Color::Transparent)
-		return MoveCode::Valid;
-
-	if (((_color == Color::Black && abs(_position.first - destination.first) == 1 && destination.second - _position.second == 1) ||
-		(_color == Color::White && abs(_position.first - destination.first) == 1 && _position.second - destination.second == 1)) &&
-		board.getPiece(destination).getColor() != _color)
-		if (board.getPiece(destination).getColor() != Color::Transparent ||
-			(board.getPiece(Point(destination.first, _position.second)).getColor() != _color &&
-			board.getPiece(Point(destination.first, _position.second)).getColor() != Color::Transparent))
-			return MoveCode::Valid;
 	return MoveCode::InvalidMove;
 }
 
-ChessMoves Pawn::getAvailableMoves(const Board& board) const
+void Pawn::getAvailableMoves(const Board& board, ChessMoves& moves) const
 {
-	ChessMoves moves;
 	int y;
 	if (_color == Color::Black)
 	{
@@ -71,5 +96,4 @@ ChessMoves Pawn::getAvailableMoves(const Board& board) const
 			board.getPiece(Point(_position.first, _position.second - 2)).getType() == PieceType::Empty)
 			moves.push_back(new ChessMove(*this, Point(_position.first, _position.second - 2)));
 	}
-	return moves;
 }

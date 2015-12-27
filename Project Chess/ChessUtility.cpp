@@ -1,5 +1,6 @@
 #include "ChessUtility.h"
 #include "ChessMove.h"
+#include <iostream>
 
 Point ChessUtility::parsePoint(const string& point) {
 	return Point(point[0] - 'a', '8' - point[1]);
@@ -49,13 +50,20 @@ bool ChessUtility::isMate(Board& board, Color color) {
 	const ChessPiece& king = board.findPiece(color, PieceType::King);
 	if (king.getType() == PieceType::Empty)
 		return false;
-	for (ChessPieces::const_iterator it = board.getPieces().begin(); it != board.getPieces().end(); it++)
+	ChessPieces pieces;
+	pieces.clone(board.getPieces());
+	for (ChessPieces::const_iterator it = pieces.begin(); it != pieces.end(); it++)
 		if (it->second->getColor() == color) {
-			ChessMoves moves = it->second->getAvailableMoves(board);
-			for (ChessMoves::const_iterator it = moves.begin(); it != moves.end(); it++) {
-				(*it)->doMove(board);
-				if (!isCheck(board, color))
+			std::cout << "Piece: " << (char)it->second->getType() << " (" << it->second->getPosition().first << ", " << it->second->getPosition().second << ")" << std::endl;
+			ChessMoves moves;
+			it->second->getAvailableMoves(board, moves);
+			for (ChessMoves::const_iterator it2 = moves.begin(); it2 != moves.end(); it2++) {
+				(*it2)->doMove(board);
+				if (!isCheck(board, color)) {
+					(*it2)->undoMove(board);
 					return false;
+				}
+				(*it2)->undoMove(board);
 			}
 		}
 	return true;

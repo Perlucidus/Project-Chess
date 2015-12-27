@@ -13,6 +13,8 @@ public:
 	virtual ~ChessMove();
 	virtual void doMove(Board&) const;
 	virtual void undoMove(Board&) const;
+	
+	bool allowsEnPassent() const;
 private:
 	ChessPiece* _source;
 	Point _destination;
